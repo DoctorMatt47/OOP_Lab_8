@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="tariffs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="tariff" type="Tariff" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+		<xs:complexType  name="Tariff">
+			<xs:sequence>
+				<xs:element name="name" type="Name"/>
+				<xs:element name="operatorName" type="Name"/>
+				<xs:element name="payroll" type="xs:unsignedInt"/>
+				<xs:element name="smsPrice" type="Price"/>
+				<xs:element name="callPrice" type="CallPrice"/>
+				<xs:element name="parameters" type="Parameters"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	
+	<xs:simpleType name="Name">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+			<xs:pattern value="([a-zA-Z0-9 ])*"/>
+		</xs:restriction>
+    </xs:simpleType>
+  
+	<xs:complexType name="CallPrice">
+		<xs:sequence>
+			<xs:element name="withinTheNetwork" type="Price"/>
+			<xs:element name="outsideTheNetwork" type="Price"/>
+			<xs:element name="toLandlinePhones" type="Price"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="Price">
+		<xs:restriction base="xs:float">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+  
+	<xs:complexType name="Parameters">
+		<xs:sequence>
+			<xs:element name="isFavoriteNumberExist" type="xs:boolean"/>
+			<xs:element name="tariffication" type="Tariffication"/>
+			<xs:element name="priceForConnection" type="xs:unsignedInt"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="Tariffication">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TWELVE_SECONDS"/>
+            <xs:enumeration value="MINUTE"/>
+            <xs:enumeration value="NO"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
