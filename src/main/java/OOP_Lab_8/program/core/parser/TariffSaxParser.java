@@ -1,9 +1,7 @@
 package OOP_Lab_8.program.core.parser;
 
-import OOP_Lab_8.program.domain.entity.CallPrice;
-import OOP_Lab_8.program.domain.entity.Parameters;
+import OOP_Lab_8.program.core.builder.ITariffBuilder;
 import OOP_Lab_8.program.domain.entity.Tariff;
-import OOP_Lab_8.program.domain.entity.Tariffication;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
@@ -15,13 +13,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class TariffSaxParser implements ITariffParser {
-    private static final ArrayList<Tariff> tariffs = new ArrayList<>();
+    private final ITariffBuilder builder;
+
+    public TariffSaxParser(ITariffBuilder builder) {
+        this.builder = builder;
+    }
 
     @Override
     public ArrayList<Tariff> parse(File xmlFile) throws TariffParseException {
+        var tariffs = new ArrayList<Tariff>();
         try {
-            SAXParserFactory.newInstance().newSAXParser().parse(xmlFile, new XmlHandler());
+            SAXParserFactory.newInstance().newSAXParser().parse(xmlFile, new XmlHandler(builder, tariffs));
         } catch (Exception e) {
             throw new TariffParseException(e.getMessage());
         }
@@ -30,22 +34,29 @@ public class TariffSaxParser implements ITariffParser {
 
     private static class XmlHandler extends DefaultHandler {
         private final Map<String, String> dict = new HashMap<>();
-        private String id;
+        private final ITariffBuilder builder;
+        private final ArrayList<Tariff> tariffs;
+
         private String elementName;
 
+        public XmlHandler(ITariffBuilder builder, ArrayList<Tariff> tariffs) {
+            this.builder = builder;
+            this.tariffs = tariffs;
+        }
+
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        public void startElement(String uri, String localName, @NotNull String qName, Attributes attributes) {
             if (qName.equals("tariff")) {
-                id = attributes.getValue("id");
+                dict.put("id", attributes.getValue("id"));
                 return;
             }
             elementName = qName;
         }
 
         @Override
-        public void endElement(String uri, String localName, String qName) {
+        public void endElement(String uri, String localName, @NotNull String qName) {
             if (qName.equals("tariff")) {
-                TariffSaxParser.tariffs.add(createTariff());
+                tariffs.add(builder.build(dict));
             }
         }
 
@@ -56,31 +67,5 @@ public class TariffSaxParser implements ITariffParser {
             dict.put(elementName, value);
         }
 
-        private @NotNull Tariff createTariff() {
-            var callPrice = createCallPrice();
-            var parameters = createParameters();
-            var name = dict.get("name");
-            var operatorName = dict.get("operatorName");
-            var payroll = Integer.parseInt(dict.get("payroll"));
-            var smsPrice = Float.parseFloat(dict.get("smsPrice"));
-
-            return new Tariff(id, name, operatorName, payroll, smsPrice, callPrice, parameters);
-        }
-
-        private @NotNull CallPrice createCallPrice() {
-            var withinTheNetwork = Float.parseFloat(dict.get("withinTheNetwork"));
-            var outsideTheNetwork = Float.parseFloat(dict.get("outsideTheNetwork"));
-            var toLandlinePhones = Float.parseFloat(dict.get("toLandlinePhones"));
-
-            return new CallPrice(withinTheNetwork, outsideTheNetwork, toLandlinePhones);
-        }
-
-        private @NotNull Parameters createParameters() {
-            var isFavoriteNumberExist = Boolean.parseBoolean(dict.get("isFavoriteNumberExist"));
-            var tariffication = Tariffication.valueOf(dict.get("tariffication"));
-            var priceForConnection = Integer.parseInt(dict.get("priceForConnection"));
-
-            return new Parameters(isFavoriteNumberExist, tariffication, priceForConnection);
-        }
     }
 }
