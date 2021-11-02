@@ -5,6 +5,7 @@ import OOP_Lab_8.program.domain.entity.Parameters;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.entity.Tariffication;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -32,7 +33,7 @@ public class TariffDomParser implements ITariffParser{
         return iterateTariffNodes(document.getDocumentElement().getElementsByTagName("tariff"));
     }
 
-    private ArrayList<Tariff> iterateTariffNodes(NodeList tariffsNodes) {
+    private @NotNull ArrayList<Tariff> iterateTariffNodes(@NotNull NodeList tariffsNodes) {
         var tariffs = new ArrayList<Tariff>(tariffsNodes.getLength());
         for (var i = 0; i < tariffsNodes.getLength(); i++) {
             tariffs.add(parseTariffNode(tariffsNodes.item(i)));
@@ -40,7 +41,7 @@ public class TariffDomParser implements ITariffParser{
         return tariffs;
     }
 
-    private Tariff parseTariffNode(Node tariffNode) {
+    private @NotNull Tariff parseTariffNode(@NotNull Node tariffNode) {
         var id = tariffNode.getAttributes().item(0).getTextContent();
         var fields = tariffNode.getChildNodes();
         var callPrice = parseCallPrice(fields.item(9));
@@ -53,7 +54,7 @@ public class TariffDomParser implements ITariffParser{
         return new Tariff(id, name, operatorName, payroll, smsPrice, callPrice, parameters);
     }
 
-    private CallPrice parseCallPrice(Node callPriceNode) {
+    private @NotNull CallPrice parseCallPrice(@NotNull Node callPriceNode) {
         var callPriceNodes = callPriceNode.getChildNodes();
         var withinTheNetwork = Float.parseFloat(callPriceNodes.item(1).getTextContent());
         var outsideTheNetwork = Float.parseFloat(callPriceNodes.item(3).getTextContent());
@@ -62,7 +63,7 @@ public class TariffDomParser implements ITariffParser{
         return new CallPrice(withinTheNetwork, outsideTheNetwork, toLandlinePhones);
     }
 
-    private Parameters parseParameters(Node parametersNode) {
+    private @NotNull Parameters parseParameters(@NotNull Node parametersNode) {
         var parametersNodes = parametersNode.getChildNodes();
         var isFavoriteNumberExist = Boolean.parseBoolean(parametersNodes.item(1).getTextContent());
         var tariffication = Tariffication.valueOf(parametersNodes.item(3).getTextContent());
