@@ -1,71 +1,85 @@
 package OOP_Lab_8.program.core.parser;
 
+import OOP_Lab_8.program.core.builder.ITariffBuilder;
 import OOP_Lab_8.program.domain.entity.CallPrice;
 import OOP_Lab_8.program.domain.entity.Parameters;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.entity.Tariffication;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TariffDomParser implements ITariffParser{
+@SuppressWarnings("ClassCanBeRecord")
+public class TariffDomParser implements ITariffParser {
+    private final ITariffBuilder builder;
+
+    public TariffDomParser(ITariffBuilder builder) {
+        this.builder = builder;
+    }
+
     @Override
     public ArrayList<Tariff> parse(File xmlFile) throws TariffParseException {
         System.out.println(xmlFile.getAbsolutePath());
-        Document document;
         try {
-            document = DocumentBuilderFactory
-                    .newDefaultInstance()
+            var tariffElements = DocumentBuilderFactory
+                    .newInstance()
                     .newDocumentBuilder()
-                    .parse(xmlFile);
+                    .parse(xmlFile)
+                    .getDocumentElement()
+                    .getElementsByTagName("tariff");
+            return iterateTariffNodes(tariffElements);
         } catch (Exception e) {
             throw new TariffParseException(e.getMessage());
         }
-        return iterateTariffNodes(document.getDocumentElement().getElementsByTagName("tariff"));
     }
 
-    private @NotNull ArrayList<Tariff> iterateTariffNodes(@NotNull NodeList tariffsNodes) {
-        var tariffs = new ArrayList<Tariff>(tariffsNodes.getLength());
-        for (var i = 0; i < tariffsNodes.getLength(); i++) {
-            tariffs.add(parseTariffNode(tariffsNodes.item(i)));
+    private @NotNull ArrayList<Tariff> iterateTariffNodes(@NotNull NodeList tariffNodes) {
+        var tariffs = new ArrayList<Tariff>(tariffNodes.getLength());
+        for (var i = 0; i < tariffNodes.getLength(); i++) {
+            Element tariffElement;
+            var tariffNode = tariffNodes.item(i);
+            if (tariffNode instanceof Element) tariffElement = (Element) tariffNode;
+            else continue;
+
+            var dict = new HashMap<String, String>();
+            dict.put("id", (tariffElement).getAttribute("id"));
+            iterateFieldNodes(tariffElement.getChildNodes(), dict);
+            tariffs.add(builder.build(dict));
         }
         return tariffs;
     }
 
-    private @NotNull Tariff parseTariffNode(@NotNull Node tariffNode) {
-        var id = tariffNode.getAttributes().item(0).getTextContent();
-        var fields = tariffNode.getChildNodes();
-        var callPrice = parseCallPrice(fields.item(9));
-        var parameters = parseParameters(fields.item(11));
-        var name = fields.item(1).getTextContent();
-        var operatorName = fields.item(3).getTextContent();
-        var payroll = Integer.parseInt(fields.item(5).getTextContent());
-        var smsPrice = Float.parseFloat(fields.item(7).getTextContent());
+    private void iterateFieldNodes(@NotNull NodeList fieldNodes, Map<String, String> dict) {
 
-        return new Tariff(id, name, operatorName, payroll, smsPrice, callPrice, parameters);
+        for (int j = 0; j < fieldNodes.getLength(); j++) {
+            Element fieldElement;
+            var tariffNode = fieldNodes.item(j);
+            if (tariffNode instanceof Element) fieldElement = (Element) tariffNode;
+            else continue;
+
+            var tagName = fieldElement.getTagName();
+            if (tagName.equals("callPrice") || tagName.equals("parameters")) {
+                iterateChildFieldNodes(fieldElement.getChildNodes(), dict);
+            }
+
+            dict.put(tagName, fieldElement.getTextContent());
+        }
     }
 
-    private @NotNull CallPrice parseCallPrice(@NotNull Node callPriceNode) {
-        var callPriceNodes = callPriceNode.getChildNodes();
-        var withinTheNetwork = Float.parseFloat(callPriceNodes.item(1).getTextContent());
-        var outsideTheNetwork = Float.parseFloat(callPriceNodes.item(3).getTextContent());
-        var toLandlinePhones = Float.parseFloat(callPriceNodes.item(5).getTextContent());
+    private void iterateChildFieldNodes(@NotNull NodeList childFieldNodes, Map<String, String> dict) {
+        for (int k = 0; k < childFieldNodes.getLength(); k++) {
+            Element childElement;
+            var tariffNode = childFieldNodes.item(k);
+            if (tariffNode instanceof Element) childElement = (Element) tariffNode;
+            else continue;
 
-        return new CallPrice(withinTheNetwork, outsideTheNetwork, toLandlinePhones);
-    }
-
-    private @NotNull Parameters parseParameters(@NotNull Node parametersNode) {
-        var parametersNodes = parametersNode.getChildNodes();
-        var isFavoriteNumberExist = Boolean.parseBoolean(parametersNodes.item(1).getTextContent());
-        var tariffication = Tariffication.valueOf(parametersNodes.item(3).getTextContent());
-        var priceForConnection = Integer.parseInt(parametersNodes.item(5).getTextContent());
-
-        return new Parameters(isFavoriteNumberExist, tariffication, priceForConnection);
+            dict.put(childElement.getTagName(), childElement.getTextContent());
+        }
     }
 }
