@@ -22,7 +22,7 @@ public class TariffDomXmlParser implements ITariffXmlParser {
     }
 
     @Override
-    public ArrayList<Tariff> parse(File xmlFile) throws TariffParseException {
+    public ArrayList<Tariff> parse(@NotNull File xmlFile) throws TariffParseException {
         System.out.println(xmlFile.getAbsolutePath());
         try {
             var tariffElements = DocumentBuilderFactory

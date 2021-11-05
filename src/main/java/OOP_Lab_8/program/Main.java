@@ -7,12 +7,13 @@ import OOP_Lab_8.program.core.parser.TariffStaxXmlParser;
 import OOP_Lab_8.program.core.validator.TariffXmlValidator;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
         var domParser = new TariffDomXmlParser(new TariffBuilder());
         var saxParser = new TariffSaxXmlParser(new TariffBuilder());
         var staxParser = new TariffStaxXmlParser(new TariffBuilder());
@@ -33,7 +34,7 @@ public class Main {
         System.out.println(isValidMessage);
     }
 
-    private static void printTariffs(Iterable<Tariff> iterable) {
+    private static void printTariffs(@NotNull Iterable<Tariff> iterable) {
         for (var elem : iterable) {
             System.out.println(elem);
         }
