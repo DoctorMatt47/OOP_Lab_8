@@ -4,6 +4,7 @@ import OOP_Lab_8.program.core.builder.ITariffBuilder;
 import OOP_Lab_8.program.core.sorter.TariffComparator;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.namespace.QName;
@@ -15,14 +16,34 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Represents tariff xml parser. Uses stax way to parse xml file.
+ */
 @SuppressWarnings("ClassCanBeRecord")
 public class TariffStaxXmlParser implements ITariffXmlParser {
+    /**
+     * Tariff builder dependency.
+     */
     private final ITariffBuilder builder;
 
+    /**
+     * Constructs tariff stax xml parser service.
+     * @param builder Tariff builder dependency.
+     */
+    @Contract(pure = true)
     public TariffStaxXmlParser(ITariffBuilder builder) {
         this.builder = builder;
     }
 
+    /**
+     * Parses xml file with list of tariff entities.
+     * Uses stax way to parse xml file.
+     * Xml file must be valid and must have tariffs with structure,
+     * described in the tariff.xsd file.
+     * @param xmlFile Xml file with tariffs.
+     * @return Sorted by id tariffs from xml file.
+     * @throws TariffParseException Be thrown, if parse was unsuccessful.
+     */
     @Override
     public ArrayList<Tariff> parse(File xmlFile) throws TariffParseException {
         try {
@@ -34,7 +55,13 @@ public class TariffStaxXmlParser implements ITariffXmlParser {
         }
     }
 
-    private ArrayList<Tariff> parseCore(@NotNull XMLEventReader reader) throws XMLStreamException {
+    /**
+     * Parses xml file, uses stax way.
+     * @param reader Event reader.
+     * @return Sorted by id tariffs from xml file.
+     * @throws XMLStreamException Invalid xml exception.
+     */
+    private @NotNull ArrayList<Tariff> parseCore(@NotNull XMLEventReader reader) throws XMLStreamException {
         var tariffs = new ArrayList<Tariff>();
         var dict = new HashMap<String, String>();
         while (reader.hasNext()) {

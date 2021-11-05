@@ -4,6 +4,7 @@ import OOP_Lab_8.program.core.builder.ITariffBuilder;
 import OOP_Lab_8.program.core.sorter.TariffComparator;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.*;
 
@@ -13,14 +14,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents tariff xml parser. Uses dom way to parse xml file.
+ */
 @SuppressWarnings("ClassCanBeRecord")
 public class TariffDomXmlParser implements ITariffXmlParser {
+    /**
+     * Tariff builder dependency.
+     */
     private final ITariffBuilder builder;
 
+    /**
+     * Constructs tariff dom xml parser service.
+     * @param builder Tariff builder dependency.
+     */
+    @Contract(pure = true)
     public TariffDomXmlParser(ITariffBuilder builder) {
         this.builder = builder;
     }
 
+    /**
+     * Parses xml file with list of tariff entities.
+     * Uses dom way to parse xml file.
+     * Xml file must be valid and must have tariffs with structure,
+     * described in the tariff.xsd file.
+     * @param xmlFile Xml file with tariffs.
+     * @return Sorted by id tariffs from xml file.
+     * @throws TariffParseException Be thrown, if parse was unsuccessful.
+     */
     @Override
     public ArrayList<Tariff> parse(@NotNull File xmlFile) throws TariffParseException {
         System.out.println(xmlFile.getAbsolutePath());
@@ -37,6 +58,11 @@ public class TariffDomXmlParser implements ITariffXmlParser {
         }
     }
 
+    /**
+     * Iterates throw the tariff nodes and builds collection of tariffs.
+     * @param tariffNodes List of tariff nodes.
+     * @return Sorted collection of tariff.
+     */
     private @NotNull ArrayList<Tariff> iterateTariffNodes(@NotNull NodeList tariffNodes) {
         var tariffs = new ArrayList<Tariff>(tariffNodes.getLength());
         for (var i = 0; i < tariffNodes.getLength(); i++) {
@@ -54,6 +80,11 @@ public class TariffDomXmlParser implements ITariffXmlParser {
         return tariffs;
     }
 
+    /**
+     * Iterates throw the nodes and fills map for tariff.
+     * @param fieldNodes Node list with fields of tariff.
+     * @param dict Map to be filled.
+     */
     private void iterateFieldNodes(@NotNull NodeList fieldNodes, Map<String, String> dict) {
 
         for (int j = 0; j < fieldNodes.getLength(); j++) {
@@ -71,6 +102,11 @@ public class TariffDomXmlParser implements ITariffXmlParser {
         }
     }
 
+    /**
+     * Iterates throw the nodes and fills map for parameters and call price.
+     * @param childFieldNodes Node list with parameters fields or call prices.
+     * @param dict Map to be filled.
+     */
     private void iterateChildFieldNodes(@NotNull NodeList childFieldNodes, Map<String, String> dict) {
         for (int k = 0; k < childFieldNodes.getLength(); k++) {
             Element childElement;

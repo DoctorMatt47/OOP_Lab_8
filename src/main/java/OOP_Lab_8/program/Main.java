@@ -11,8 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-
+/**
+ * Represents entry point of OOP_Lab_7 application.
+ */
 public class Main {
+    /**
+     * Entry point. Launches OOP_Lab_7 application.
+     */
     public static void main(String[] args) {
         var domParser = new TariffDomXmlParser(new TariffBuilder());
         var saxParser = new TariffSaxXmlParser(new TariffBuilder());
@@ -34,6 +39,10 @@ public class Main {
         System.out.println(isValidMessage);
     }
 
+    /**
+     * Prints collection of tariffs on the console.
+     * @param iterable Collection of tariffs to print.
+     */
     private static void printTariffs(@NotNull Iterable<Tariff> iterable) {
         for (var elem : iterable) {
             System.out.println(elem);
