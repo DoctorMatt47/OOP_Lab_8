@@ -1,10 +1,7 @@
 package OOP_Lab_8.program.core.parser;
 
 import OOP_Lab_8.program.core.builder.ITariffBuilder;
-import OOP_Lab_8.program.domain.entity.CallPrice;
-import OOP_Lab_8.program.domain.entity.Parameters;
 import OOP_Lab_8.program.domain.entity.Tariff;
-import OOP_Lab_8.program.domain.entity.Tariffication;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.*;
@@ -16,10 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class TariffDomParser implements ITariffParser {
+public class TariffDomXmlParser implements ITariffXmlParser {
     private final ITariffBuilder builder;
 
-    public TariffDomParser(ITariffBuilder builder) {
+    public TariffDomXmlParser(ITariffBuilder builder) {
         this.builder = builder;
     }
 

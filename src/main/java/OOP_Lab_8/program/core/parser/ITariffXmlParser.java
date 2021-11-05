@@ -6,6 +6,6 @@ import OOP_Lab_8.program.domain.exception.TariffParseException;
 import java.io.File;
 import java.util.ArrayList;
 
-public interface ITariffParser {
+public interface ITariffXmlParser {
     ArrayList<Tariff> parse(File xmlFile) throws TariffParseException;
 }

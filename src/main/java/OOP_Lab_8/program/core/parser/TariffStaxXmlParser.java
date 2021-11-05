@@ -1,10 +1,7 @@
 package OOP_Lab_8.program.core.parser;
 
 import OOP_Lab_8.program.core.builder.ITariffBuilder;
-import OOP_Lab_8.program.domain.entity.CallPrice;
-import OOP_Lab_8.program.domain.entity.Parameters;
 import OOP_Lab_8.program.domain.entity.Tariff;
-import OOP_Lab_8.program.domain.entity.Tariffication;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class TariffStaxParser implements ITariffParser {
+public class TariffStaxXmlParser implements ITariffXmlParser {
     private final ITariffBuilder builder;
 
-    public TariffStaxParser(ITariffBuilder builder) {
+    public TariffStaxXmlParser(ITariffBuilder builder) {
         this.builder = builder;
     }
 

@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class TariffSaxParser implements ITariffParser {
+public class TariffSaxXmlParser implements ITariffXmlParser {
     private final ITariffBuilder builder;
 
-    public TariffSaxParser(ITariffBuilder builder) {
+    public TariffSaxXmlParser(ITariffBuilder builder) {
         this.builder = builder;
     }
 
