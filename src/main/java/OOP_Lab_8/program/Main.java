@@ -4,6 +4,7 @@ import OOP_Lab_8.program.core.builder.TariffBuilder;
 import OOP_Lab_8.program.core.parser.TariffDomXmlParser;
 import OOP_Lab_8.program.core.parser.TariffSaxXmlParser;
 import OOP_Lab_8.program.core.parser.TariffStaxXmlParser;
+import OOP_Lab_8.program.core.validator.TariffXmlValidator;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
 
@@ -26,6 +27,10 @@ public class Main {
         } catch (TariffParseException e) {
             System.out.println(e.getMessage());
         }
+        var validator = new TariffXmlValidator();
+        var isValidMessage = validator.isValid(new File("src/main/resources/tariffs.xml"))
+                ? "Xml is valid" : "Xml is invalid";
+        System.out.println(isValidMessage);
     }
 
     private static void printTariffs(Iterable<Tariff> iterable) {
