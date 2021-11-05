@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<tariffs>
+
+    <tariff id="junior">
+        <name>Junior</name>
+        <operatorName>Vodafone</operatorName>
+        <payroll>75</payroll>
+        <smsPrice>0.5</smsPrice>
+        <callPrice>
+            <withinTheNetwork>0.2</withinTheNetwork>
+            <outsideTheNetwork>5.0</outsideTheNetwork>
+            <toLandlinePhones>2.5</toLandlinePhones>
+        </callPrice>
+        <parameters>
+            <isFavoriteNumberExist>false</isFavoriteNumberExist>
+            <tariffication>MINUTE</tariffication>
+            <priceForConnection>0</priceForConnection>
+        </parameters>
+    </tariff>
+
+    <tariff id="network">
+        <name>NetworkPlus</name>
+        <operatorName>Lifecell</operatorName>
+        <payroll>150</payroll>
+        <smsPrice>0.1</smsPrice>
+        <callPrice>
+            <withinTheNetwork>0.15</withinTheNetwork>
+            <outsideTheNetwork>7.5</outsideTheNetwork>
+            <toLandlinePhones>2.0</toLandlinePhones>
+        </callPrice>
+        <parameters>
+            <isFavoriteNumberExist>false</isFavoriteNumberExist>
+            <tariffication>NO</tariffication>
+            <priceForConnection>25</priceForConnection>
+        </parameters>
+    </tariff>
+
+    <tariff id="platinum">
+        <name>Platinum</name>
+        <operatorName>Beeline</operatorName>
+        <payroll>225</payroll>
+        <smsPrice>0</smsPrice>
+        <callPrice>
+            <withinTheNetwork>0</withinTheNetwork>
+            <outsideTheNetwork>1.5</outsideTheNetwork>
+            <toLandlinePhones>0.5</toLandlinePhones>
+        </callPrice>
+        <parameters>
+            <isFavoriteNumberExist>true</isFavoriteNumberExist>
+            <tariffication>TWELVE_SECONDS</tariffication>
+            <priceForConnection>10</priceForConnection>
+        </parameters>
+    </tariff>
+
+</tariffs>
