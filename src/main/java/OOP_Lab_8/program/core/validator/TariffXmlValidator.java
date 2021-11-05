@@ -11,8 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class TariffXmlValidator {
-    private static final File SCHEMA_FILE = new File("src" + File.separator +
-            "main" + File.separator + "resources" + File.separator + "site.xsd");
+    private static final File SCHEMA_FILE = new File("src/main/resources/tariff.xsd");
 
     private final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 

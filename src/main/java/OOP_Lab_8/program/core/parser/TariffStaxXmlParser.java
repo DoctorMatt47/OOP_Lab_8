@@ -1,6 +1,7 @@
 package OOP_Lab_8.program.core.parser;
 
 import OOP_Lab_8.program.core.builder.ITariffBuilder;
+import OOP_Lab_8.program.core.sorter.TariffComparator;
 import OOP_Lab_8.program.domain.entity.Tariff;
 import OOP_Lab_8.program.domain.exception.TariffParseException;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +61,7 @@ public class TariffStaxXmlParser implements ITariffXmlParser {
                 }
             }
         }
+        tariffs.sort(new TariffComparator());
         return tariffs;
     }
 }
